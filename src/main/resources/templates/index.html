@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️ 心动 · 我爱你</title>
+    <style>
+        /* 你的所有样式保持不变，只添加一个隐藏按钮 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #2b1a2e 0%, #1e1a2f 50%, #2a1e30 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Microsoft YaHei', '楷体', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                    radial-gradient(2px 2px at 10px 30px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 90px 140px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 160px 80px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 280px 190px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(3px 3px at 350px 250px, #ffd9e6, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 450px 70px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(3px 3px at 530px 320px, #ffb6c1, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 650px 180px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 720px 420px, #fff, rgba(0,0,0,0)),
+                    radial-gradient(3px 3px at 820px 280px, #ff99aa, rgba(0,0,0,0));
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .heart-wrapper {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 20px 30px rgba(255, 80, 120, 0.5));
+            transform: scale(1);
+            animation: float 4s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.02); }
+        }
+
+        .heart-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { filter: drop-shadow(0 20px 30px rgba(255, 80, 120, 0.5)); }
+            50% { filter: drop-shadow(0 25px 40px rgba(255, 50, 100, 0.8)); }
+            100% { filter: drop-shadow(0 20px 30px rgba(255, 80, 120, 0.5)); }
+        }
+
+        .heart-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: drop-shadow(0 5px 15px rgba(220, 38, 38, 0.4));
+        }
+
+        .heart-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            z-index: 20;
+            font-size: 42px;
+            font-weight: 700;
+            color: #fff9f0;
+            text-shadow:
+                    0 2px 10px #ff4d6d,
+                    0 0 20px #ffb3c6,
+                    2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 6px;
+            white-space: nowrap;
+            font-family: 'Microsoft YaHei', '楷体', 'KaiTi', cursive;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 24px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(200, 30, 60, 0.3);
+            animation: textGlow 3s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 2px 10px #ff4d6d, 0 0 20px #ffb3c6; background: rgba(255,255,255,0.1); }
+            100% { text-shadow: 0 2px 20px #ff1744, 0 0 40px #ff99aa, 0 0 60px #ff4d6d; background: rgba(255,255,255,0.2); }
+        }
+
+        .sound-control {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .sound-toggle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 120, 140, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 100, 120, 0.3);
+            border-color: #ff99aa;
+            box-shadow: 0 0 20px #ff4d6d;
+        }
+
+        .sound-toggle.muted::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 24px;
+            background: white;
+            transform: rotate(45deg);
+            box-shadow: 0 0 8px #ff4d6d;
+        }
+
+        .sound-toggle:not(.muted)::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 120, 140, 0.6);
+            animation: ripple 2s linear infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-hearts span {
+            position: absolute;
+            color: rgba(255, 120, 140, 0.5);
+            font-size: 20px;
+            animation: floatAround 6s linear infinite;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(var(--x, 100px), var(--y, -100px)) rotate(360deg); opacity: 0; }
+        }
+
+        .info-card {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(30, 20, 30, 0.75);
+            backdrop-filter: blur(10px);
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: #ffc0cb;
+            font-size: 16px;
+            border: 1px solid rgba(255, 120, 140, 0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 100;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card span {
+            color: #ff99bb;
+            font-weight: bold;
+            background: rgba(255, 200, 210, 0.2);
+            padding: 4px 10px;
+            border-radius: 40px;
+        }
+
+        .info-card .time {
+            background: #ff4d6d;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        /* 隐藏按钮 - 用于模拟用户点击 */
+        #autoPlayButton {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            pointer-events: none;
+        }
+
+        @media (max-width: 500px) {
+            .heart-wrapper { width: 280px; height: 280px; }
+            .heart-text { font-size: 32px; letter-spacing: 4px; padding: 6px 18px; }
+            .sound-control { top: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+<!-- 隐藏按钮 - 用于模拟用户点击 -->
+<button id="autoPlayButton"></button>
+
+<!-- 音频标签 -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="/music/周杰伦 - 听妈妈的话.mp3" type="audio/mpeg">
+    <source src="/music/周杰伦 - 听妈妈的话.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放
+</audio>
+
+<!-- 主视觉：精美 SVG 爱心 + 文字 -->
+<div class="heart-wrapper heart-pulse">
+    <!-- SVG 完美爱心 -->
+    <svg class="heart-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+        <defs>
+            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ff6b8b;stop-opacity:1" />
+                <stop offset="40%" style="stop-color:#ff3d5a;stop-opacity:1" />
+                <stop offset="70%" style="stop-color:#d42e4e;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#b11c3a;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="heartHighlight" cx="30%" cy="30%" r="50%" fx="25%" fy="25%">
+                <stop offset="0%" style="stop-color:#ffe5ea;stop-opacity:0.7" />
+                <stop offset="70%" style="stop-color:#ff8da1;stop-opacity:0.2" />
+                <stop offset="100%" style="stop-color:#ff3d5a;stop-opacity:0" />
+            </radialGradient>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                <feMerge>
+                    <feMergeNode in="offsetblur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+        <path d="M50,25 C20,5 -20,45 50,80 C120,45 80,5 50,25 Z"
+              fill="url(#heartGradient)" stroke="#ffb3c6" stroke-width="0.8" filter="url(#glow)"/>
+        <path d="M50,25 C20,5 -20,45 50,80 C120,45 80,5 50,25 Z"
+              fill="url(#heartHighlight)" stroke="none" opacity="0.8"/>
+        <path d="M50,25 C20,5 -20,45 50,80 C120,45 80,5 50,25 Z"
+              fill="none" stroke="#ffd9e2" stroke-width="1.5" stroke-opacity="0.5"/>
+    </svg>
+
+    <!-- 爱心中间的文字 -->
+    <div class="heart-text" th:text="${heartWord} ?: '我爱你'">我爱你</div>
+
+    <!-- 漂浮的小爱心 -->
+    <div class="floating-hearts">
+        <span style="--x:80px; --y:-120px; left:10%; top:30%; animation-delay:0s;">❤️</span>
+        <span style="--x:-60px; --y:-90px; left:70%; top:60%; animation-delay:1.5s;">❤️</span>
+        <span style="--x:100px; --y:-150px; left:40%; top:80%; animation-delay:0.8s;">❤️</span>
+        <span style="--x:-90px; --y:-70px; left:85%; top:15%; animation-delay:2.2s;">❤️</span>
+    </div>
+</div>
+
+<!-- ========== 小喇叭控制按钮 ========== -->
+<div class="sound-control">
+    <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">
+        🔊
+    </div>
+</div>
+
+<!-- 动态信息卡片 -->
+<div class="info-card" th:if="${showInfo} != false">
+    <span th:text="${username} ?: '访客'">访客</span>
+    <span class="time" th:text="${#dates.format(#dates.createNow(), 'HH:mm:ss')}">23:59:59</span>
+    <span th:text="${blessing} ?: '❤️ 爱你永远'">❤️ 爱你永远</span>
+</div>
+
+<script>
+    (function () {
+        const audio = document.getElementById('bgMusic');
+        const soundToggle = document.getElementById('soundToggle');
+
+        if (!audio) return;
+
+        // 初始状态：静音自动播放（关键）
+        audio.muted = true;
+        audio.volume = 0.5;
+
+        // ===============================
+        // ✅ 解锁声音（关键逻辑）
+        // ===============================
+        function unlockAudio() {
+            if (!audio.muted) return;
+
+            audio.muted = false;
+
+            audio.play().then(() => {
+                soundToggle.classList.remove('muted');
+                soundToggle.innerHTML = '🔊';
+            }).catch(() => {});
+
+            // 只执行一次
+            document.removeEventListener('click', unlockAudio);
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('scroll', unlockAudio);
+        }
+
+        // 多种用户行为触发（提高成功率）
+        document.addEventListener('click', unlockAudio, { once: true });
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('scroll', unlockAudio, { once: true });
+
+        // ===============================
+        // ✅ 页面加载自动播放（静音）
+        // ===============================
+        window.addEventListener('load', function () {
+            audio.play().catch(() => {
+                // 有些浏览器仍然需要触发一次
+                console.log("等待用户交互解锁音频");
+            });
+        });
+
+        // ===============================
+        // ✅ 喇叭控制
+        // ===============================
+        window.toggleSound = function () {
+            if (audio.paused) {
+                audio.muted = false;
+                audio.play();
+                soundToggle.classList.remove('muted');
+                soundToggle.innerHTML = '🔊';
+            } else {
+                audio.pause();
+                soundToggle.classList.add('muted');
+                soundToggle.innerHTML = '🔇';
+            }
+        };
+
+        // ===============================
+        // ✅ 状态同步
+        // ===============================
+        audio.addEventListener('play', () => {
+            if (!audio.muted) {
+                soundToggle.classList.remove('muted');
+                soundToggle.innerHTML = '🔊';
+            }
+        });
+
+        audio.addEventListener('pause', () => {
+            soundToggle.classList.add('muted');
+            soundToggle.innerHTML = '🔇';
+        });
+
+    })();
+</script>
+</body>
+</html>

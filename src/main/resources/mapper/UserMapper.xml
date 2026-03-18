@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间:dao接口的路径-->
+<mapper namespace="com.pw.pplink.mapper.UseMapper">
+    <resultMap id="BaseResultMap" type="com.pw.pplink.entity.po.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="phoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+    </resultMap>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultType="com.pw.pplink.entity.po.User">
+        select * from user where id=#{id}
+    </select>
+
+
+</mapper>
