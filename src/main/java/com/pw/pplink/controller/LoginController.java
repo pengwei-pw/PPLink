@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("login")
 public class LoginController {
+    /**
+     * 登录
+     */
 
     @Autowired
     private LoginServices loginServices;
