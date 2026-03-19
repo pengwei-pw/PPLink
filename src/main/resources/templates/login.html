@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPLink · sign in</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9eef5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.1), 0 5px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .login-header {
+            margin-bottom: 28px;
+        }
+
+        .login-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* Password header with forgot link */
+        .password-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .forgot-link {
+            font-size: 12px;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Options */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+
+        .remember label {
+            font-size: 14px;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        /* Button */
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn:hover {
+            background: #0f172a;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 10px -2px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 28px 0;
+            color: #94a3b8;
+            font-size: 12px;
+            gap: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        /* Social login */
+        .social-login {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .social-icon {
+            font-size: 18px;
+        }
+
+        /* Sign up link */
+        .signup-link {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .signup-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert messages */
+        .alert {
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            color: #b91c1c;
+        }
+
+        .alert-success {
+            background-color: #f0fdf4;
+            border: 1px solid #dcfce7;
+            color: #166534;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background-color: #e8f0fe;
+            border-radius: 40px;
+            font-size: 12px;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Logo -->
+    <div class="logo">
+        <h1>PPLink <span>· console</span></h1>
+        <p>8081 · dev environment</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+        <!-- Server Status -->
+        <div class="status-badge">
+            <span class="dot"></span>
+            <span>server running · 13 min uptime</span>
+        </div>
+
+        <!-- Header -->
+        <div class="login-header">
+            <h2>Welcome back</h2>
+            <p>Sign in to access your dashboard</p>
+        </div>
+
+        <!-- Alert Message (thymeleaf dynamic) -->
+        <div class="alert alert-error" th:if="${param.error}" th:remove="tag">
+            <span>⚠️</span>
+            <span>Invalid username or password</span>
+        </div>
+        <div class="alert alert-success" th:if="${param.logout}" th:remove="tag">
+            <span>✓</span>
+            <span>You have been signed out</span>
+        </div>
+
+        <!-- Login Form -->
+        <form th:action="@{/login}" method="post">
+            <!-- Username -->
+            <div class="form-group">
+                <label class="form-label">USERNAME</label>
+                <input type="text" name="username" class="form-input"
+                       placeholder="Enter your username" required autofocus>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <div class="password-header">
+                    <label class="form-label">PASSWORD</label>
+                    <a href="#" class="forgot-link">Forgot?</a>
+                </div>
+                <input type="password" name="password" class="form-input"
+                       placeholder="••••••••" required>
+            </div>
+
+            <!-- Options -->
+            <div class="form-options">
+                <div class="remember">
+                    <input type="checkbox" id="remember" name="remember-me">
+                    <label for="remember">Remember me</label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="login-btn">
+                Sign in →
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span>OR CONTINUE WITH</span>
+        </div>
+
+        <!-- Social Login (Optional) -->
+        <div class="social-login">
+            <button class="social-btn" onclick="alert('Google login demo')">
+                <span class="social-icon">G</span>
+                <span>Google</span>
+            </button>
+            <button class="social-btn" onclick="alert('GitHub login demo')">
+                <span class="social-icon">⌨️</span>
+                <span>GitHub</span>
+            </button>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="signup-link">
+            Don't have an account?
+            <a href="#">Create account</a>
+        </div>
+    </div>
+
+    <!-- Version Info -->
+    <div style="text-align: center; margin-top: 24px; color: #94a3b8; font-size: 12px;">
+        PPLink v0.0.1-SNAPSHOT · Java 17
+    </div>
+</div>
+</body>
+</html>

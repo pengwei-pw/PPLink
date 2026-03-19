@@ -12,7 +12,6 @@ public class LoginServicesImpl implements LoginServices {
     private UseMapper useMapper;
     @Override
     public User selectById(int id) {
-        int index = 1;
-        return useMapper.selectById(index);
+        return useMapper.selectById(id);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("login")
 public class LoginController {
     /**
      * 登录
@@ -18,10 +17,9 @@ public class LoginController {
     @Autowired
     private LoginServices loginServices;
 
-    @GetMapping("user")
-    @ResponseBody
-    public User selectUserById(){
-        User user = loginServices.selectById(1);
-        return user;
+    @GetMapping("login")
+    public String login(){
+        return "login";
     }
+
 }
